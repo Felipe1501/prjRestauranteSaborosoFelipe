@@ -39,3 +39,8 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+
+app.listen(3101, function () {
+  console.log("Express server listening on port 3101");
+});
