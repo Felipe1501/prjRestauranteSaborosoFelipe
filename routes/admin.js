@@ -1,4 +1,5 @@
 var express = require("express");
+var users =  require("./../inc/users");
 var router = express.Router();
 //redis = armazena informações, armazena em chave e em valor
 router.get("/", function(req, res, next){
@@ -25,13 +26,28 @@ router.get("/menus", function(req, res, next){
     });
 });
 
-router.get("/login", function(req, res, next){
-    
-    if (!req.session.views) req.session.views = 0;
+router.post("/login", function(req, res, next){
+    if(!req.body.email){
+        users.render(req, res, "Preencha o campo e-mail.");
+    }else if(!req.body.password){
+        users.render(req, res, "Preencha o campo senha.");
+    }else{
+        users.login(req.body.email, req.body.password).then(user =>{
 
-    console.log("SESSION:", req.session.views++);
-    
-    res.render("admin/login");
+            req.session.user = user;
+
+            res.redirect("/admin");   
+
+        }).catch(err => {
+            users.render(req, res, err.message || err);
+        });
+    }
+});
+
+router.get("/login", function(req, res, next){
+
+    users.render(req, res, null);
+
 });
 
 router.get("/reservations", function(req, res, next){
