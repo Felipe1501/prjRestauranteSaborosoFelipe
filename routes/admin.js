@@ -15,7 +15,7 @@ router.use(function(req, res, next){
 //redis = armazena informações, armazena em chave e em valor
 
 router.use(function(req, res, next){
-    req.menus = admin.getMenus();
+    req.menus = admin.getMenus(req);
 
     next();
 });
