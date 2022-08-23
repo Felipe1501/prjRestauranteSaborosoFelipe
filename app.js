@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
@@ -12,6 +14,16 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use(session({
+    store: new RedisStore({
+      host:'localhost',
+      port:6379
+    }),
+    secret:'Felipe3050@',
+    resave:true,
+    saveUninitialized:true
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
