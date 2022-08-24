@@ -5,11 +5,36 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
+const formidable = require('formidable');
+
 
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 
 const app = express();
+
+app.use(function(req, res, next){
+
+  if(req.method === 'POST'){
+
+    var form = formidable.IncomingForm({
+      uploadDir:path.join(__dirname, "/public/images"),
+      keepExtensions:true
+    });
+  
+    form.parse(req, function(err, fields, files){
+      req.fields = fields;
+      req.files = files;
+  
+      next();
+    });
+
+  }else{
+    
+    next();
+  }
+
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -54,7 +54,11 @@ router.get("/menus", function(req, res, next){
 });
 
 router.post("/menus", function(req, res, next){
-    res.send(req.body);
+    menus.save(req.fields, req.files).then(results =>{
+        res.send(results);
+    }).catch(err=>{
+        res.send(err);
+    });
 });
 
 router.post("/login", function(req, res, next){
