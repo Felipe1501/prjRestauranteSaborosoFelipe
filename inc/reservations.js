@@ -17,6 +17,7 @@ module.exports = {
         return new Promise((resolve, reject)=>{
 
             if(fields.date.indexOf('/') > -1){
+
                 let date = fields.date.split('/');
 
                 fields.date = `${date[2]}-${date[1]}-${date[0]}`;
@@ -31,6 +32,7 @@ module.exports = {
             ];
 
             if(parseInt(fields.id) > 0 ){
+
                 query = `
                     UPDATE tb_reservations
                     SET
@@ -45,20 +47,42 @@ module.exports = {
                 params.push(fields.id);
 
             }else {
+
                 query = `
                     INSERT INTO tb_reservations (name, email, people, date, time)
                     VALUES(?, ?, ?, ?, ?)
                 `;
+
             }
 
             conn.query(query, params, (err, results)=>{
+
             if(err){
+
                 reject(err);
+
             }else {
+
                 resolve(results);
+
             }
         }); 
     });
 
-    }
+    },
+    getReservations(){
+        return new Promise((resolve, reject)=>{
+            
+            conn.query(`
+  
+            SELECT * FROM tb_reservations ORDER BY date DESC`, (err, results)=>{
+              if (err){
+                reject(err);
+              }
+        
+             resolve(results);
+            });
+        
+        });
+    },
 };

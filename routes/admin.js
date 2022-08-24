@@ -95,9 +95,16 @@ router.get("/login", function(req, res, next){
 });
 
 router.get("/reservations", function(req, res, next){
+
+    reservations.getReservations().then(data =>{
+        
     res.render("admin/reservations", admin.getParams(req, {
-        date: {}
-    }));
+        date: {},
+        data
+     }));
+    
+    });
+
 });
 
 router.post("/reservations", function(req, res, next){
