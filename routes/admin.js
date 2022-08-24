@@ -61,6 +61,14 @@ router.post("/menus", function(req, res, next){
     });
 });
 
+router.delete("/menus/:id", function(req, res, next){
+    menus.delete(req.params.id).then(results=>{
+        res.send(results);
+    }).catch(err=>{
+        res.send(err);
+    });
+});
+
 router.post("/login", function(req, res, next){
     if(!req.body.email){
         users.render(req, res, "Preencha o campo e-mail.");
