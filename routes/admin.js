@@ -53,6 +53,10 @@ router.get("/menus", function(req, res, next){
     });
 });
 
+router.post("/menus", function(req, res, next){
+    res.send(req.body);
+});
+
 router.post("/login", function(req, res, next){
     if(!req.body.email){
         users.render(req, res, "Preencha o campo e-mail.");
