@@ -23,6 +23,7 @@ app.use(function(req, res, next){
     });
   
     form.parse(req, function(err, fields, files){
+      req.body = fields;
       req.fields = fields;
       req.files = files;
   
@@ -30,7 +31,7 @@ app.use(function(req, res, next){
     });
 
   }else{
-    
+
     next();
   }
 
@@ -52,7 +53,7 @@ app.use(session({
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+//app.use(express.urlencoded({ extended: false })); linha dando conflito
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
