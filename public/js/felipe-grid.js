@@ -43,26 +43,32 @@ class FelipeGrid{
     initForms(){
       this.formCreate = document.querySelector(this.options.formCreate);
       
-      this.formCreate.save({
-        sucess:()=>{
-          this.fireEvent('afterFormCreate');
-        },
-        failure:()=>{
-          this.fireEvent('afterFormCreateError');
-        }
-      });
+      if(this.formCreate){
+        this.formCreate.save({
+          sucess:()=>{
+            this.fireEvent('afterFormCreate');
+          },
+          failure:()=>{
+            this.fireEvent('afterFormCreateError');
+          }
+        });
+      }
 
 
       this.formUpdate = document.querySelector(this.options.formUpdate);
 
-      this.formUpdate.save({
-        sucess:()=>{
-          this.fireEvent('afterFormUpdate');
-        },
-        failure:()=>{
-          this.fireEvent('afterFormUpdateError');
-        }
-      });
+      if (this.formUpdate){
+        this.formUpdate.save({
+          sucess:()=>{
+            this.fireEvent('afterFormUpdate');
+          },
+          failure:()=>{
+            this.fireEvent('afterFormUpdateError');
+          }
+        });
+      }
+
+
     }
 
     fireEvent(name, args){
