@@ -1,10 +1,26 @@
+
 class FelipeGrid{
     constructor(configs){
         configs.listeners = Object.assign({
           afterUpdateClick:(e)=>{
             $('#modal-update').modal('show');
           },
-        
+          afterDeleteClick:(e)=>{
+            window.location.reload();
+          },
+          afterFormCreate: (e)=>{
+            window.location.reload();
+          },
+          afterFormUpdate: (e)=>{
+            window.location.reload();
+          },
+          afterFormCreateError: (e) =>{
+              alert('Não foi possível enviar o formulário.');
+          },
+          afterFormUpdateError: (e) =>{
+            alert('Não foi possível enviar o formulário.');
+        }
+
       }, configs.listeners);
 
         this.options = Object.assign({}, {
@@ -23,11 +39,12 @@ class FelipeGrid{
       
       this.formCreate.save().then(json=>{
 
-        window.location.reload();
+        this.fireEvent('afterFormCreate');
 
       }).catch(err =>{
 
-        console.log(err);
+        this.fireEvent('afterFormCreateError');
+
 
       });
 
@@ -35,10 +52,12 @@ class FelipeGrid{
       this.formUpdate = document.querySelector(this.options.formUpdate);
 
       this.formUpdate.save().then(json=>{
-       window.location.reload();
+
+        this.fireEvent('afterFormUpdate');
+
       }).catch(err =>{
 
-        console.log(err);
+        this.fireEvent('afterFormUpdateError');
         
       });
     }
@@ -49,6 +68,14 @@ class FelipeGrid{
 
     }
 
+    getTrData(e){
+      let tr = e.path.find(el =>{
+        return (el.tagName.toUpperCase() === 'TR');
+      });
+
+      return JSON.parse(tr.dataset.row);
+    }
+
     initButtons(){
         
 
@@ -57,11 +84,7 @@ class FelipeGrid{
 
           this.fireEvent('beforeUpdateClick', [e]);
 
-         let tr = e.path.find(el =>{
-            return (el.tagName.toUpperCase() === 'TR');
-          });
-
-          let data = JSON.parse(tr.dataset.row);
+          let data = this.getTrData(e);
 
           for (let name in data){
             let input = this.formUpdate.querySelector(`[name=${name}]`);
@@ -90,12 +113,9 @@ class FelipeGrid{
       [...document.querySelectorAll(this.options.btnDelete)].forEach(btn=>{
         btn.addEventListener('click', e=>{
 
+          this.fireEvent('beforeDeleteClick');
 
-          let tr = e.path.find(el =>{
-            return (el.tagName.toUpperCase() === 'TR');
-          });
-
-          let data = JSON.parse(tr.dataset.row);
+          let data = this.getTrData(e);
 
           if (confirm(eval('`' + this.options.deleteMsg + '`'))) {
             fetch(eval('`' + this.options.deleteUrl + '`'), {
@@ -103,7 +123,9 @@ class FelipeGrid{
           })
           .then(response => response.json())
           .then(json => {
-            window.location.reload();
+
+            this.fireEvent('afterDeleteClick');
+            
           });
           
         }
