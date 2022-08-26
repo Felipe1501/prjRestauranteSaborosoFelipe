@@ -6,12 +6,20 @@ const logger = require('morgan');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const formidable = require('formidable');
-
+var http = require('http');
+var socket = require('socket.io');
 
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 
 const app = express();
+
+var http = http.Server(app);
+var io = socket(http);
+
+io.on('connection', function(socket){
+  console.log('Novo Usuário conectado');
+})
 
 app.use(function(req, res, next){
 
@@ -52,7 +60,7 @@ app.use(session({
 }));
 
 app.use(logger('dev'));
-app.use(express.json());
+//app.use(express.json());
 //app.use(express.urlencoded({ extended: false })); linha dando conflito
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -76,9 +84,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
-
-
-app.listen(3101, function () {
-  console.log("Express server listening on port 3101");
+http.listen(3000, function(){
+  console.log("servidor rodando homo sapiens");
 });
+
