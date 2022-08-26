@@ -1,4 +1,4 @@
-const { param } = require("../routes/admin");
+
 let conn = require("./db");
 
 class Pagination {
@@ -78,6 +78,13 @@ class Pagination {
             nrend = this.getCurrentPage() + parseInt(limitPagesNav/2);
         }
 
+        if(this.getCurrentPage() > 1){
+            links.push({
+                text: '«',
+                href: '?' + this.getQueryString(Object.assign({}, params, {page: this.getCurrentPage() - 1}))
+            });
+        }
+
         for(let x = nrstart; x <=nrend; x++){
             links.push({
                 text: x,
@@ -86,11 +93,18 @@ class Pagination {
             });
         }
 
+        if(this.getCurrentPage() < this.getTotalPages()){
+            links.push({
+                text: '»',
+                href: '?' + this.getQueryString(Object.assign({}, params, {page: this.getCurrentPage() + 1}))
+            });
+        }
+
         return links;
      }
 
      getQueryString(params){
-        let queryString;
+        let queryString = [];
 
         for(let name in params){
             queryString.push(`${name}=${params[name]}`);
