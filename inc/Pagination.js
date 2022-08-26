@@ -56,7 +56,7 @@ class Pagination {
      }
 
      getNavigation(params){
-        let limitPagesNav = 5;
+        let limitPagesNav = 7;
         let links = [];
         let nrstart = 0;
         let nrend = 0;
@@ -72,10 +72,10 @@ class Pagination {
             //chegando nas últimas pags
         }else if((this.getCurrentPage() + parseInt(limitPagesNav/1)) > this.getTotalPages()){
             nrstart = this.getTotalPages() - limitPagesNav;
-            nrend = this.getTotalPages;
+            nrend = this.getTotalPages();
         }else {
-            nrstart = this.getCurrentPage() - parseInt(limitPagesNav/2);
-            nrend = this.getCurrentPage() + parseInt(limitPagesNav/2);
+            nrstart = this.getCurrentPage() - parseInt(limitPagesNav / 2);
+            nrend = this.getCurrentPage() + parseInt(limitPagesNav / 2);
         }
 
         if(this.getCurrentPage() > 1){
