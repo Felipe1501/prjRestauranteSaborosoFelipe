@@ -9,8 +9,6 @@ const formidable = require('formidable');
 var http = require('http');
 var socket = require('socket.io');
 
-const indexRouter = require('./routes/index');
-const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -19,9 +17,16 @@ var io = socket(http);
 
 io.on('connection', function(socket){
   console.log('Novo Usuário conectado');
-})
+
+
+});
+
+const indexRouter = require('./routes/index')(io);
+const adminRouter = require('./routes/admin')(io);
 
 app.use(function(req, res, next){
+
+  req.body = {};
 
   if(req.method === 'POST'){
 
