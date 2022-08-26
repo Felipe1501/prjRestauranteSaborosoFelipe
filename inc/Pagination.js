@@ -1,3 +1,4 @@
+const { param } = require("../routes/admin");
 let conn = require("./db");
 
 class Pagination {
@@ -35,6 +36,7 @@ class Pagination {
                     this.itensPerPage);
                     this.currentPage++;
 
+
                     resolve(this.data);
                 }
             });
@@ -51,6 +53,50 @@ class Pagination {
 
      getTotalPages(){
         return this.getTotalPages;
+     }
+
+     getNavigation(params){
+        let limitPagesNav = 5;
+        let links = [];
+        let nrstart = 0;
+        let nrend = 0;
+
+        if(this.getTotalPages() < limitPagesNav) {
+            limitPagesNav = this.getTotalPages();
+        }
+
+        //se estamos nas primeiras pags
+        if((this.getCurrentPage() - parseInt(limitPagesNav/2)) < 1){
+            nrstart = 1;
+            nrend = limitPagesNav;
+            //chegando nas últimas pags
+        }else if((this.getCurrentPage() + parseInt(limitPagesNav/1)) > this.getTotalPages()){
+            nrstart = this.getTotalPages() - limitPagesNav;
+            nrend = this.getTotalPages;
+        }else {
+            nrstart = this.getCurrentPage() - parseInt(limitPagesNav/2);
+            nrend = this.getCurrentPage() + parseInt(limitPagesNav/2);
+        }
+
+        for(let x = nrstart; x <=nrend; x++){
+            links.push({
+                text: x,
+                href: '?' + this.getQueryString(Object.assign({}, params, {page: x})),
+                active: (x === this.getCurrentPage())
+            });
+        }
+
+        return links;
+     }
+
+     getQueryString(params){
+        let queryString;
+
+        for(let name in params){
+            queryString.push(`${name}=${params[name]}`);
+        }
+
+        return queryString.join("&");
      }
 }
 
